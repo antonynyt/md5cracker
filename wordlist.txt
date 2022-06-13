@@ -1,0 +1,9 @@
+12345
+123
+motdepasse
+secret
+admin
+password
+pass123
+P4$$w0rd^
+default
