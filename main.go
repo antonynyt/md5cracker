@@ -1,6 +1,5 @@
 package main
 
-
 //$ env GOOS=linux GOARCH=arm64 go build -o prepnode_arm64
 //prend en flag hash, salt, wordlist
 //loop over every line of the wordlist file
@@ -9,6 +8,7 @@ package main
 import (
 	"bufio"
 	"crypto/md5"
+	"embed"
 	"encoding/hex"
 	"flag"
 	"fmt"
@@ -16,20 +16,24 @@ import (
 	"os"
 )
 
+//go:embed wordlist.txt
+var f embed.FS
 
 func main() {
-	
+
 	//flags
-	hash := flag.String("p", "c21f969b5f03d33d43e04f8f136e7682", "The password hash.")//default hash is default
+	hash := flag.String("p", "c21f969b5f03d33d43e04f8f136e7682", "The password hash.") //default hash is default
 	salt := flag.String("s", "", "The password salt.")
 	wordlist := flag.String("w", "wordlist.txt", "Wordlist to crack the password. e.g. rockyou.txt")
 	flag.Parse()
 
-
 	//open the wordlist
-	file, err := os.Open(*wordlist) // For read access.
+	file, err := f.Open(*wordlist)
 	if err != nil {
-		log.Fatal(err)
+		file, err = os.Open(*wordlist)
+		if err != nil {
+			log.Fatal(err)
+		}
 	}
 	defer file.Close()
 
@@ -52,7 +56,6 @@ func main() {
 			fmt.Printf("Password is %v\n", scanner.Text())
 			break
 		}
-			
 
 	}
 
