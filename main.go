@@ -39,6 +39,7 @@ func main() {
 
 	//read the lines of the wordlist
 	scanner := bufio.NewScanner(file)
+	var password string
 	//loop trough the lines of the wordlist
 	for scanner.Scan() {
 		line := scanner.Text()
@@ -53,10 +54,16 @@ func main() {
 
 		//test if plaintext hashed equ the hash flag
 		if hex.EncodeToString(md5hash[:]) == *hash {
-			fmt.Printf("Password is %v\n", scanner.Text())
+			password = scanner.Text()
 			break
 		}
 
+	}
+
+	if password != "" {
+		fmt.Printf("Password is %v\n", password)
+	} else {
+		fmt.Println("No password found")
 	}
 
 }
